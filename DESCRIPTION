@@ -1,0 +1,42 @@
+Package: BAMBA
+Type: Package
+Title: Runs a model on BAMA or Fc array data using rstan
+Version: 1.0
+Date: 2018-03-19
+Authors@R: person("William", "Young", email = "wyoung@fredhutch.org", role = c("aut", "cre"))
+Description: More about what it does (may be more than one line)
+License: What license is it under?
+Depends: R (>= 3.0.2), Rcpp (>= 0.12.14), methods
+Imports: rstan (>= 2.16.2), rstantools (>= 1.3.0)
+LinkingTo: StanHeaders (>= 2.16.0.1), rstan (>= 2.16.2), BH (>= 1.65.0.1), Rcpp (>= 0.12.14), RcppEigen (>= 0.3.3.3.1)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Collate: 
+    'BAMBA-package.R'
+    'BAMBA.r'
+    'BAMBAResult-methods.r'
+    'add_parameter_summaries.r'
+    'antigen_barplot.r'
+    'breadth_scores.r'
+    'build_BAMBA_summary.r'
+    'build_model_data.r'
+    'build_parameter_initialization.r'
+    'collect_scores.r'
+    'confusion_matrices.r'
+    'data_maps.r'
+    'date_filename.r'
+    'efdr.r'
+    'extract_params.r'
+    'fdr_cutoff.r'
+    'magnitude_breadth_scores.r'
+    'parameter_barplot_custom.r'
+    'utils.r'
+    'prepare_data.r'
+    'reagent_barplot.r'
+    'response_call_evaluation.r'
+    'response_heatmap.r'
+    'response_heatmap_custom.r'
+    'responses.r'
+    'stanmodels.R'
+    'zzz.R'
