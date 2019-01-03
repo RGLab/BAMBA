@@ -13,5 +13,5 @@ build_BAMBA_summary <- function(modelFit) {
                          "q025", "q25", "q50", "q75", "q975",
                        "n_eff", "Rhat", "var")
 
-    parSumm %>% select(var, mean, se_mean, sd, q025, q25, q50, q75, q975, n_eff, Rhat)
+    parSumm %>% dplyr::select(var, mean, se_mean, sd, q025, q25, q50, q75, q975, n_eff, Rhat)
 }

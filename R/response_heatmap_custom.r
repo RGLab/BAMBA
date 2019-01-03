@@ -62,23 +62,36 @@ response_heatmap_custom <- function(result,
         arrange(xorder, yorder)
 
     xax <- hmData %>%
-        select(xorder, xlabel, xgroup, xcolor) %>%
+        dplyr::select(xorder, xlabel, xgroup, xcolor) %>%
         distinct() %>%
         arrange(xorder)
-    xsep <- cumsum(table(xax$xlabel))
-##    xsep2 <- floor((xsep + c(0, xsep[1:(length(xsep)-1)])) / 2)
-    xsep2 <- ceiling((xsep + c(0, xsep[1:(length(xsep)-1)])) / 2)
-    xgrpsep <- cumsum(table(xax$xgroup))
+
+    xsep <- cumsum(rle(xax$xlabel)$lengths)
+    ##    xsep2 <- floor((xsep + c(0, xsep[1:(length(xsep)-1)])) / 2)
+    xsep2 <- NULL
+    if (length(xsep) > 1) {
+        xsep2 <- ceiling((xsep + c(0, xsep[1:(length(xsep)-1)])) / 2)
+    } else {
+        xsep2 <- ceiling(xsep /2)
+    }
+    ## xgrpsep <- cumsum(table(xax$xgroup))
+    xgrpsep <- cumsum(rle(xax$xgroup)$lengths)
 
 
     yax <- hmData %>%
-        select(yorder, ylabel, ygroup, ycolor) %>%
+        dplyr::select(yorder, ylabel, ygroup, ycolor) %>%
         distinct() %>%
         arrange(yorder)
-    ysep <- cumsum(table(yax$ylabel))
+    ysep <- cumsum(rle(yax$ylabel)$lengths)
 ##    ysep2 <- floor((ysep + c(0, ysep[1:(length(ysep)-1)])) / 2)
-    ysep2 <- ceiling((ysep + c(0, ysep[1:(length(ysep)-1)])) / 2)
-    ygrpsep <- cumsum(table(yax$ygroup))
+    ysep2 <- NULL
+    if (length(ysep) > 1) {
+        ysep2 <- ceiling((ysep + c(0, ysep[1:(length(ysep)-1)])) / 2)
+    } else {
+        ysep2 <- ceiling(ysep /2)
+    }
+    ## ygrpsep <- cumsum(table(yax$ygroup))
+    ygrpsep <- cumsum(rle(yax$ygroup)$lengths)
 
     hmPlot <- NULL
     if (is.null(responseThreshold)) {

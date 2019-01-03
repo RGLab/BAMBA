@@ -1,4 +1,4 @@
-# BAMBA: Bayesian Analysis of Multiplexed Binding Antibody data
+# BAMBA: Bayesian Analysis of Multiplex Binding Antibody data
 
 BAMBA is a package for fitting a grouped mixture model to BAMA or Fc
 Array data in order to model immune response to various antigens in

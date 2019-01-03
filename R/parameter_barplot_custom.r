@@ -53,10 +53,10 @@ parameter_barplot_custom <- function(paramData,
         mutate(fillGroup = as.character(fillGroup))
     barColors = paramData %>%
         arrange(order) %>%
-        select(fillGroup, fillColor) %>%
+        dplyr::select(fillGroup, fillColor) %>%
         distinct()
     xax <- paramData %>%
-        select(order, label, group, labelColor) %>%
+        dplyr::select(order, label, group, labelColor) %>%
         distinct() %>%
         arrange(order)
     xsep <- cumsum(table(xax$label))

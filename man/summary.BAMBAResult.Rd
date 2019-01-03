@@ -4,7 +4,7 @@
 \alias{summary.BAMBAResult}
 \title{Summarize a BAMBAResult Object}
 \usage{
-summary.BAMBAResult(object, ...)
+\method{summary}{BAMBAResult}(object, ...)
 }
 \arguments{
 \item{object}{An object of class \code{BAMBAResult}.}

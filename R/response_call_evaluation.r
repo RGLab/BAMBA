@@ -20,7 +20,7 @@ response_call_evaluation <- function(result, subjectData, fdrs, cutoffs) {
     resp <- responses(result)
     confData <- resp %>%
         left_join(subjectData, by = "subjectId") %>%
-        select(ag, tp, responseProb, isResponder)
+        dplyr::select(ag, tp, responseProb, isResponder)
     tps <- sort(unique(confData$tp))
 
     fdrs_full <- c(sapply(cutoffs, efdr, resp = confData$responseProb), fdrs)

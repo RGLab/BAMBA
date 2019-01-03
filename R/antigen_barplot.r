@@ -14,7 +14,7 @@
 antigen_barplot <- function(result,
                             includeIntervals = F) {
     agData <- result$mu_ag %>%
-        select(ag, tp, mu_ag, q025, q975) %>%
+        dplyr::select(ag, tp, mu_ag, q025, q975) %>%
         arrange(ag, tp) %>%
         rename(paramValue = mu_ag,
                qlower = q025,

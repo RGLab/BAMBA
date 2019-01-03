@@ -14,7 +14,7 @@
 reagent_barplot <- function(result,
                             includeIntervals = F) {
     reData <- result$mu_re %>%
-        select(re, tp, mu_re, q025, q975) %>%
+        dplyr::select(re, tp, mu_re, q025, q975) %>%
         arrange(re, tp) %>%
         rename(paramValue = mu_re,
                qlower = q025,

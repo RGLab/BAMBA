@@ -4,9 +4,9 @@
                                tp %in% unique(resp$tp)) %>%
                  group_by(ag) %>%
                  summarize(maxmu = max(mu_ag)) %>%
-                 select(maxmu))
+                 dplyr::select(maxmu))
     fab <- resp %>%
-        left_join(mu_ag %>% select(ag, tp, mu_ag),
+        left_join(mu_ag %>% dplyr::select(ag, tp, mu_ag),
                   by = c("ag", "tp")) %>%
         group_by(group, subjectId, ag) %>%
         summarize(magProb = max(mu_ag[responseProb == max(responseProb)]) *
@@ -20,9 +20,9 @@
                                tp %in% unique(reps$tp)) %>%
                  group_by(re) %>%
                  summarize(maxmu = max(mu_re)) %>%
-                 select(maxmu))
+                 dplyr::select(maxmu))
     fcr <- resp %>%
-        left_join(mu_re %>% select(re, tp, mu_re),
+        left_join(mu_re %>% dplyr::select(re, tp, mu_re),
                   by = c("re", "tp")) %>%
         group_by(group, subjectId, re) %>%
         summarize(magProb = max(mu_re[responseProb == max(responseProb)]) *
@@ -63,7 +63,7 @@ magnitude_breadth_scores <- function(result,
                               result$mu_re
                               )
     if (result$dataType == "bama") {
-        scores %>% select(-reClass, -fcRMagBreadth)
+        scores %>% dplyr::select(-reClass, -fcRMagBreadth)
     }
     else { scores }
 }

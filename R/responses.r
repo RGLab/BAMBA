@@ -14,10 +14,10 @@ responses <- function(result) {
     respProbs <- result %>% extract_params2("z[", ",2]") %>%
         rename(responseProb = mean) %>%
         mutate(isResp = responseProb > 0.5) %>%
-        select(isResp, responseProb, sd, q025, q975, n_eff, Rhat)
+        dplyr::select(isResp, responseProb, sd, q025, q975, n_eff, Rhat)
     ## make sure to grab the correct columns
     bind_cols(result$data, respProbs) %>%
-        select(subjectId, group, groupId, ag, agId,
+        dplyr::select(subjectId, group, groupId, ag, agId,
                re, reId, tp, val, isResp, responseProb,
                sd, q025, q975, n_eff, Rhat)
 }

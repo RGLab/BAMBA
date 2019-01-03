@@ -8,6 +8,7 @@
 #' @name BAMBA-package
 #' @aliases BAMBA-package
 #' @useDynLib BAMBA, .registration = TRUE
+#' 
 #'
 #' @import methods
 #' @import stats
