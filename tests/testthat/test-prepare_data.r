@@ -27,13 +27,9 @@ testdata <- simulate_fc_data(nTp, nGrp, nSubj, nAg, nRe,
                           groupProbs, agProbs, reProbs)
 
 simulated_data <- testdata$simData %>%
-    select(subjectId, group, re, ag, val, tp) %>%
+    select(subjectId, group, re, ag, val, tp, sat) %>%
     tbl_df()
 
-## test dataType requirement
-test_that("The dataType field is required to be 'bama' or 'fc'", {
-    expect_error( prepare_data(simulated_data, "notGoodDatatype") )
-})
 
 ## test column name requirement
 bad_name_data <- simulated_data %>% rename(subject = subjectId)
@@ -41,9 +37,9 @@ missing_column_data <- simulated_data %>% select(-ag)
 extra_column_data <- simulated_data %>% mutate(extraCol = 1:n())
 
 test_that("The columns are checked and selected correctly", {
-    expect_error( prepare_data(bad_name_data, "fc") )
+    expect_error( prepare_data(bad_name_data) )
 
-    expect_error( prepare_data(missing_column_data, "fc") )
+    expect_error( prepare_data(missing_column_data) )
 })
 
 ## test non-numeric/NA values
@@ -64,32 +60,43 @@ test_that("The val column is properly checked and filtered", {
 
     prepData <- NULL
 
-    expect_warning({prepData <- prepare_data(single_na_data, "fc")})
+    expect_warning({prepData <- prepare_data(single_na_data)})
     expect_equal(nrow_sim - 1, nrow(prepData))
 
-    expect_warning({prepData <- prepare_data(multiple_na_data, "fc")})
+    expect_warning({prepData <- prepare_data(multiple_na_data)})
     expect_equal(nrow_sim - 8, nrow(prepData))
 
-    expect_warning({prepData <- prepare_data(non_numeric_data, "fc")})
+    expect_warning({prepData <- prepare_data(non_numeric_data)})
     expect_equal(nrow_sim - 1, nrow(prepData))
 
-    expect_warning({prepData <- prepare_data(na_non_numeric_data, "fc")})
+    expect_warning({prepData <- prepare_data(na_non_numeric_data)})
     expect_equal(nrow_sim - 2, nrow(prepData))
 })
 
 ## test column addition
 nogroup_data <- simulated_data %>% select(-group)
+fixed_data <- NULL
 test_that("The group column is added if not present", {
-    expect_warning(prepare_data(nogroup_data, "fc"))
-    fixed_data <- prepare_data(nogroup_data, "bama")
+    expect_message({fixed_data = prepare_data(nogroup_data)})
     expect("group" %in% colnames(fixed_data))
 })
     
 nore_data <- simulated_data %>% select(-re)
 test_that("The re column is added if not present", {
-    expect_warning(prepare_data(nore_data, "fc"))
-    fixed_data <- prepare_data(nore_data, "bama")
+  expect_message({fixed_data = prepare_data(nore_data)})
     expect("re" %in% colnames(fixed_data))
+})
+
+notp_data <- simulated_data %>% select(-tp)
+test_that("The tp column is added if not present", {
+  expect_message({fixed_data = prepare_data(notp_data)})
+  expect("tp" %in% colnames(fixed_data))
+})
+
+nosat_data <- simulated_data %>% select(-sat)
+test_that("The sat column is added if not present", {
+  expect_message({fixed_data = prepare_data(nosat_data)})
+  expect("sat" %in% colnames(fixed_data))
 })
 
 ## test non-standard tp
@@ -100,9 +107,9 @@ non_dense_data <- simulated_data
 non_dense_data$tp[c(1,4,7)] <- "1.5"
 
 test_that("The tp column is properly checked and adjusted", {
-    expect_error( prepare_data(non_numeric_tp_data, "fc") )
+    expect_error( prepare_data(non_numeric_tp_data) )
     dense_data <- NULL
-    expect_warning({dense_data <- prepare_data(non_dense_data, "fc")})
+    expect_warning({dense_data <- prepare_data(non_dense_data)})
     dense_tps <- non_dense_data$tp
     dense_tps[dense_tps == 2] <- 3
     dense_tps[c(1,4,7)] <- 2
@@ -110,5 +117,17 @@ test_that("The tp column is properly checked and adjusted", {
     comp_data <- dense_data %>%
         left_join(non_dense_data, by = c("subjectId", "group", "re", "ag", "val"))
     expect_equal(comp_data$tp.x, comp_data$tp.y)
+})
+
+## test non-standard sat
+non_logical_sat_data <- simulated_data
+non_logical_sat_data$sat[5] <- "sat"
+
+zero_one_sat_data <- simulated_data
+zero_one_sat_data$sat[5] <- 1
+
+test_that("The sat column is properly checked", {
+  expect_error(prepare_data(non_logical_sat_data))
+  temp <- prepare_data(zero_one_sat_data)
 })
 

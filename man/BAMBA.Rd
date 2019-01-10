@@ -4,12 +4,11 @@
 \alias{BAMBA}
 \title{Fit the BAMBA model on BAMA or Fc array data}
 \usage{
-BAMBA(data, dataType = "fc", nChains = 1, nIter = 2000,
-  outFolder = NULL, outFile = date_filename("BAMBA_stanfit.rds"), ...)
+BAMBA(data, nChains = 1, nIter = 2000, outFolder = NULL,
+  outFile = date_filename("BAMBA_stanfit.rds"), ...)
 }
 \arguments{
-\item{dataType}{A string denoting the type of data
-to be modeled ('bama' or 'fc'). Defaults to 'fc'.}
+\item{data}{The data to be modeled.}
 
 \item{nChains}{The number of chains to run for the stan sampling.
 Defaults to 1. If more than one chain is used, it is recommended
@@ -28,15 +27,12 @@ Defaults to '<yyyy-mm-dd>_BAMBA_stanfit.rds'.}
 
 \item{...}{Additional parameters to pass to the stan sampling function.
 See the rstan documentation for more information.}
-
-\item{bamaData}{The data to be modeled.}
 }
 \value{
 A \code{BAMBAResult} is a list with the following components:
 
 \item{data}{The validated and prepared data used to fit
   the \code{BAMBA} model.}
-\item{dataType}{The type of data modeled. Either 'bama' or 'fc'.}
 \item{chains}{The number of chains run for the stan sampling.}
 \item{iter}{The number of iterations per chain for the stan sampling.}
 \item{parameters}{A \code{data.frame} summarizing all parameters sampled
@@ -49,18 +45,15 @@ A \code{BAMBAResult} is a list with the following components:
   Fc variable offsets, mu_re. Only included if \code{dataType == 'fc'}.}
 \item{mu_ar}{A \code{data.frame} summarizing the samples of the
   antigen/Fc variable offsets, mu_ar = mu_ag + mu_re.
-  Only included if \code{dataType == 'fc'}. This is included because mu_ar
-  has more sampling stability than mu_ag and mu_re.}
+  mu_ar has more sampling stability than mu_ag and mu_re.}
 \item{omega_t}{A \code{data.frame} summarizing the samples of the
   prior response probabilities per timepoint, omega_t.}
 \item{omega_ag}{A \code{data.frame} summarizing the samples of the
   prior response probabilities per antigen, omega_ag.}
 \item{omega_re}{A \code{data.frame} summarizing the samples of the
-  prior response probabilities per Fc variable, omega_re.
-  Only included if \code{dataType == 'fc'}.}
+  prior response probabilities per Fc variable, omega_re.}
 \item{omega_grp}{A \code{data.frame} summarizing the samples of the
-  prior response probabilities per group, omega_grp.
-  Only included if \code{dataType == 'fc'}.}
+  prior response probabilities per group, omega_grp.}
 \item{hyperparameters}{A \code{data.frame} summarizing
   the samples of the model hyperparameters.}
 }
@@ -74,7 +67,6 @@ TODO: change params out to just list all the options?
 bamaData <- prepare_bama_data()
 
 fit <- BAMBA(bamaData,
-              dataType = "bama",
               nChains = 1,
               nIter = 200, ## set higher for a real analysis
               outFolder = NULL)

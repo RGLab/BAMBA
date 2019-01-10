@@ -5,9 +5,7 @@
 #'       saving the stanfit object or returning it
 #'       keeping original data
 #'
-#' @param bamaData The data to be modeled.
-#' @param dataType A string denoting the type of data
-#'   to be modeled ('bama' or 'fc'). Defaults to 'fc'.
+#' @param data The data to be modeled.
 #' @param nChains The number of chains to run for the stan sampling.
 #'   Defaults to 1. If more than one chain is used, it is recommended
 #'   to call \code{options(mc.cores = parallel::detectCores())}
@@ -26,7 +24,6 @@
 #'
 #' \item{data}{The validated and prepared data used to fit
 #'   the \code{BAMBA} model.}
-#' \item{dataType}{The type of data modeled. Either 'bama' or 'fc'.}
 #' \item{chains}{The number of chains run for the stan sampling.}
 #' \item{iter}{The number of iterations per chain for the stan sampling.}
 #' \item{parameters}{A \code{data.frame} summarizing all parameters sampled
@@ -39,25 +36,21 @@
 #'   Fc variable offsets, mu_re. Only included if \code{dataType == 'fc'}.}
 #' \item{mu_ar}{A \code{data.frame} summarizing the samples of the
 #'   antigen/Fc variable offsets, mu_ar = mu_ag + mu_re.
-#'   Only included if \code{dataType == 'fc'}. This is included because mu_ar
-#'   has more sampling stability than mu_ag and mu_re.}
+#'   mu_ar has more sampling stability than mu_ag and mu_re.}
 #' \item{omega_t}{A \code{data.frame} summarizing the samples of the
 #'   prior response probabilities per timepoint, omega_t.}
 #' \item{omega_ag}{A \code{data.frame} summarizing the samples of the
 #'   prior response probabilities per antigen, omega_ag.}
 #' \item{omega_re}{A \code{data.frame} summarizing the samples of the
-#'   prior response probabilities per Fc variable, omega_re.
-#'   Only included if \code{dataType == 'fc'}.}
+#'   prior response probabilities per Fc variable, omega_re.}
 #' \item{omega_grp}{A \code{data.frame} summarizing the samples of the
-#'   prior response probabilities per group, omega_grp.
-#'   Only included if \code{dataType == 'fc'}.}
+#'   prior response probabilities per group, omega_grp.}
 #' \item{hyperparameters}{A \code{data.frame} summarizing
 #'   the samples of the model hyperparameters.}
 #'
 #' @export
 #' @example examples/BAMBA_fit.r
 BAMBA <- function(data,
-                  dataType = "fc",
                   nChains = 1,
                   nIter = 2000,
                   outFolder = NULL,
@@ -65,13 +58,13 @@ BAMBA <- function(data,
                   ...) {
 
     ## Model preparation
-    dataType <- tolower(dataType)
-    data <- prepare_data(data, dataType)
-    modelData <- build_model_data(data, dataType)
+    data <- prepare_data(data)
+    modelData <- build_model_data(data)
     paramInit <- build_parameter_initialization(modelData)
+    modelName <- build_model_name(modelData)
 
     ## Run stan
-    stanRes <- rstan::sampling(stanmodels[[paste0(dataType, "_model")]],
+    stanRes <- rstan::sampling(stanmodels[[modelName]],
                     data = modelData,
                     init = function(){paramInit},
                     iter = nIter,
@@ -84,7 +77,6 @@ BAMBA <- function(data,
     
     output <- list(
         data = data,
-        dataType = dataType,
         chains = nChains,
         iter = nIter,
         parameters = build_BAMBA_summary(stanRes))

@@ -1,21 +1,17 @@
-// 2-component grouped mixture model for Fc array data
-// 1 component is centered at mu0
+// BAMBA model
+// 2-component grouped mixture model for BAMA or Fc array data
+// 1 component is centered at mu0 (unique per timepoint)
 // The other component is centered at a group mean
 // which is mu0 + an antigen (ag) effect + an Fc variable (re) effect (both positive)
 // Each observation comes either from the group centered at mu0
 // or from the particular group it is a part of
 // given by ag and re
-// Prior probability of is a product of group, ag, re, and timepoint probabilities
+// Prior probability of is a product of ag, re, and timepoint probabilities
 
 // y_i = [y_{i1}, ..., y_{iT}]^T
 // f(y_{it} | \theta) = N(\mu_{0t}, \sigma_t)^{1-z_{it}} N(\mu_{0t} + mu_{art}, \sigma_t)^{z_{it}}
-// z_{it} ~ Bernoulli(\omega_{grp} * \omega_{ag} * \omega_{re} * \omega_t)
+// z_{it} ~ Bernoulli(\omega_{ag} * \omega_{re} * \omega_t)
 // \mu_{0t} ~ N(0, 0.25) (variance is 0.25)
-// \omega_{grp} ~ Beta(a_{grp}, b_{grp})
-// a_{grp} = \lambda_{grp} \phi_{grp}
-// b_{grp} = \lambda_{grp} (1 - \phi_{grp})
-// \lambda_{grp} ~ Pareto(0.1, 1.5)
-// \phi_{grp} ~ Beta(1, 1)
 // \omega_{ag} ~ Beta(a_{ag}, b_{ag})
 // a_{ag} = \lambda_{ag} \phi_{ag}
 // b_{ag} = \lambda_{ag} (1 - \phi_{ag})
@@ -37,18 +33,15 @@ data {
   int<lower=1> N; // Number of observations
   int<lower=1> T; // Number of timepoints (dimension of observations)
   int<lower=1> obs_to_t[N];
-  int<lower=1> N_grp; // grouping for mixture probability
-  int<lower=1> obs_to_grp[N];
   int<lower=1> N_ag; // grouping for antigen
   int<lower=1> obs_to_ag[N];
-  int<lower=1> N_re; // grouping for reagent
+  int<lower=1> N_re; // grouping for Fc variable
   int<lower=1> obs_to_re[N];
   vector[N] y;
 }
 
 parameters {
   // Overall probability of an observation being in a non-zero group
-  real<lower=0, upper=1> omega_grp[N_grp];
   real<lower=0, upper=1> omega_ag[N_ag];
   real<lower=0, upper=1> omega_re[N_re];
   real<lower=0, upper=1> omega_t[T];
@@ -60,8 +53,6 @@ parameters {
   real<lower=0> beta_re; // variance parameter for mu_re gamma prior
   matrix<lower=0>[N_ag, T] mu_ag; // antigen response mean
   matrix<lower=0>[N_re, T] mu_re; // Fc variable response mean
-  real<lower=0, upper=1> phi_grp; // hyperprior for omega (as found in Stan manual)
-  real<lower=0.1> lambda_grp; // hyperprior for omega (as found in Stan manual)
   real<lower=0, upper=1> phi_ag; // hyperprior for omega (as found in Stan manual)
   real<lower=0.1> lambda_ag; // hyperprior for omega (as found in Stan manual)
   real<lower=0, upper=1> phi_re; // hyperprior for omega (as found in Stan manual)
@@ -72,8 +63,6 @@ parameters {
 }
 
 transformed parameters {
-  real<lower=0> a_grp;
-  real<lower=0> b_grp;
   real<lower=0> a_ag;
   real<lower=0> b_ag;
   real<lower=0> a_re;
@@ -82,9 +71,7 @@ transformed parameters {
   real<lower=0> b_t;
   vector<upper=0>[2] soft_z[N]; // used to track the group membership
   matrix<lower=0>[N_ag, N_re] mu_ar[T];
-
-  a_grp = lambda_grp * phi_grp;
-  b_grp = lambda_grp * (1 - phi_grp);
+  
   a_ag = lambda_ag * phi_ag;
   b_ag = lambda_ag * (1 - phi_ag);
   a_re = lambda_re * phi_re;
@@ -99,13 +86,13 @@ transformed parameters {
       }
     }
   }
-
+  
   // Calculate log probabilities for each observation in the zero and non-zero groups
   for (n in 1:N) {
-      soft_z[n][1] = log(1-omega_grp[obs_to_grp[n]] * omega_ag[obs_to_ag[n]] *
+      soft_z[n][1] = log(1-omega_ag[obs_to_ag[n]] *
                              omega_re[obs_to_re[n]] * omega_t[obs_to_t[n]]) +
 			normal_lpdf(y[n] | mu0[obs_to_t[n]], sigma[obs_to_t[n]]);
-      soft_z[n][2] = log(omega_grp[obs_to_grp[n]] * omega_ag[obs_to_ag[n]] *
+      soft_z[n][2] = log(omega_ag[obs_to_ag[n]] *
                            omega_re[obs_to_re[n]] * omega_t[obs_to_t[n]]) +
                     normal_lpdf(y[n] | mu0[obs_to_t[n]] +
 		                       mu_ar[obs_to_t[n]][obs_to_ag[n], obs_to_re[n]],
@@ -115,15 +102,12 @@ transformed parameters {
 
 model {
   sigma ~ cauchy(0, 10);
-  phi_grp ~ beta(1, 1);          // as in Stan manual
-  lambda_grp ~ pareto(0.1, 1.5); // as in Stan manual
   phi_ag ~ beta(1, 1);          // as in Stan manual
   lambda_ag ~ pareto(0.1, 1.5); // as in Stan manual
   phi_re ~ beta(1, 1);          // as in Stan manual
   lambda_re ~ pareto(0.1, 1.5); // as in Stan manual
   phi_t ~ beta(1, 1);          // as in Stan manual
   lambda_t ~ pareto(0.1, 1.5); // as in Stan manual
-  omega_grp ~ beta(a_grp, b_grp);
   omega_ag ~ beta(a_ag, b_ag);
   omega_re ~ beta(a_re, b_re);
   omega_t ~ beta(a_t, b_t);
@@ -141,7 +125,7 @@ model {
   for (n_r in 1:N_re) {
     mu_re[n_r,] ~ gamma(alpha_re, beta_re);
   }
-
+  
   for (n in 1:N) {
       target += log_sum_exp(soft_z[n]);
   }

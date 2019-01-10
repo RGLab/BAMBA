@@ -7,23 +7,13 @@
 #' fitting the BAMBA model.
 #'
 #' @param data The data to validate and prepare.
-#' @param dataType A string denoting the type of data
-#'   to be modeled ('bama' or 'fc').
 #'
 #' @return A validated and prepared \code{data.frame}, ready for
 #'   use in the BAMBA model.
 #'
 #' @noRd
-prepare_data <- function(data, dataType) {
+prepare_data <- function(data) {
     errorStrings <- NULL
-    ## Check dataType (must be bama or fc)
-    if (!dataType %in% c("bama", "fc")) {
-        errorStrings <- c(errorStrings,
-                          paste0("Invalid dataType specified:",
-                                 dataType,
-                                 ". Must be either 'bama' or 'fc'"), "\n")
-    }
-    isFcData <- (dataType == "fc")
 
     ## Check for the appropriate columns in the data
     colErrorStr <- paste0("Invalid data - must contain the following columns: ",
@@ -32,6 +22,25 @@ prepare_data <- function(data, dataType) {
         errorStrings <- c(errorStrings, colErrorStr)
     }
 
+    ## Ensure group, re, tp columns for fc array data
+    ## Add them for bama data as well, but silently
+    if (!"group" %in% colnames(data)) {
+      message("data - simple group column added")
+      data <- data %>% mutate(group = "No Group")
+    }
+    if (!"re" %in% colnames(data)) {
+      message("data - simple re column added")
+      data <- data %>% mutate(re = "No Fc Variable")
+    }
+    if (!"tp" %in% colnames(data)) {
+      message("data - simple tp column added")
+      data <- data %>% mutate(tp = 1)
+    }
+    if (!"sat" %in% colnames(data)) {
+      message("data - simple sat column added")
+      data <- data %>% mutate(sat = FALSE)
+    }
+    
     ## Check tp column
     data$tp <- suppressWarnings(as.numeric(data$tp))
     if (any(is.na(data$tp))) {
@@ -39,6 +48,13 @@ prepare_data <- function(data, dataType) {
                           "Invalid data - tp column must be numeric\n")
     }
 
+    ## Check sat column
+    data$sat <- suppressWarnings(as.logical(data$sat))
+    if (any(is.na(data$sat))) {
+      errorStrings <- c(errorStrings,
+                        "Invalid data - sat column must contain TRUE or FALSE values only\n")
+    }
+    
     if(!is.null(errorStrings)) {
         stop(errorStrings)
     }
@@ -57,17 +73,6 @@ prepare_data <- function(data, dataType) {
         warning(str_c(nNAvals, " non-numeric or NA value",
                       ifelse(nNAvals == 1, "", "s"),
                       " found - removing for analysis"))
-    }
-
-    ## Ensure group, re columns for fc array data
-    ## Add them for bama data as well, but silently
-    if (!"group" %in% colnames(data)) {
-        if (isFcData) {warning("data - group column added")}
-        data <- data %>% mutate(group = "No Group")
-    }
-    if (!"re" %in% colnames(data)) {
-        if (isFcData) {warning("data - re column added")}
-        data <- data %>% mutate(re = "No Fc Variable")
     }
 
     ## Return prepared data

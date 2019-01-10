@@ -1,1 +1,1 @@
-BAMBA_COLUMN_NAMES <- c("subjectId", "ag", "tp", "val")
+BAMBA_COLUMN_NAMES <- c("subjectId", "ag", "val")

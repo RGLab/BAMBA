@@ -7,12 +7,24 @@
 using namespace Rcpp;
 
 
-RcppExport SEXP _rcpp_module_boot_stan_fit4bama_model_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4fc_model_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4bamba_ag_fc_grp_model_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4bamba_ag_fc_grp_sat_model_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4bamba_ag_fc_model_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4bamba_ag_fc_sat_model_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4bamba_ag_grp_model_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4bamba_ag_grp_sat_model_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4bamba_ag_model_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4bamba_ag_sat_model_mod();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rcpp_module_boot_stan_fit4bama_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bama_model_mod, 0},
-    {"_rcpp_module_boot_stan_fit4fc_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4fc_model_mod, 0},
+    {"_rcpp_module_boot_stan_fit4bamba_ag_fc_grp_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bamba_ag_fc_grp_model_mod, 0},
+    {"_rcpp_module_boot_stan_fit4bamba_ag_fc_grp_sat_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bamba_ag_fc_grp_sat_model_mod, 0},
+    {"_rcpp_module_boot_stan_fit4bamba_ag_fc_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bamba_ag_fc_model_mod, 0},
+    {"_rcpp_module_boot_stan_fit4bamba_ag_fc_sat_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bamba_ag_fc_sat_model_mod, 0},
+    {"_rcpp_module_boot_stan_fit4bamba_ag_grp_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bamba_ag_grp_model_mod, 0},
+    {"_rcpp_module_boot_stan_fit4bamba_ag_grp_sat_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bamba_ag_grp_sat_model_mod, 0},
+    {"_rcpp_module_boot_stan_fit4bamba_ag_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bamba_ag_model_mod, 0},
+    {"_rcpp_module_boot_stan_fit4bamba_ag_sat_model_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4bamba_ag_sat_model_mod, 0},
     {NULL, NULL, 0}
 };
 

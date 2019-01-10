@@ -1,8 +1,8 @@
 Package: BAMBA
 Type: Package
 Title: Runs a model on BAMA or Fc array data using rstan
-Version: 1.0
-Date: 2018-03-19
+Version: 1.0.1
+Date: 2019-01-03
 Authors@R: person("William", "Young", email = "wyoung@fredhutch.org", role = c("aut", "cre"))
 Description: More about what it does (may be more than one line)
 License: What license is it under?
@@ -21,6 +21,7 @@ Collate:
     'breadth_scores.r'
     'build_BAMBA_summary.r'
     'build_model_data.r'
+    'build_model_name.r'
     'build_parameter_initialization.r'
     'collect_scores.r'
     'confusion_matrices.r'

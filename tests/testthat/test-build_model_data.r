@@ -29,11 +29,11 @@ testdata <- simulate_fc_data(nTp, nGrp, nSubj, nAg, nRe,
 simulated_data <- testdata$simData %>%
     select(subjectId, group, re, ag, val, tp)
 
-prepared_data <- prepare_data(simulated_data, "fc")
+prepared_data <- prepare_data(simulated_data)
 
 ## ## Test aspects of the list returned by build_model_data
 
-model_data <- build_model_data(prepared_data, "fc")
+model_data <- build_model_data(prepared_data)
 
 test_that("The build_model_data function counts things correctly", {
     expect_equal(nTp * nGrp * nSubj * nAg * nRe, model_data$N)

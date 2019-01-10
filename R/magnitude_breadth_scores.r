@@ -62,7 +62,7 @@ magnitude_breadth_scores <- function(result,
                               result$mu_ag,
                               result$mu_re
                               )
-    if (result$dataType == "bama") {
+    if (length(unique(result$data$reId))< 2) {
         scores %>% dplyr::select(-reClass, -fcRMagBreadth)
     }
     else { scores }

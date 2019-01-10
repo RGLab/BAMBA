@@ -17,7 +17,7 @@
 #' @import stringr
 #' @import tidyr
 #' @import ggplot2
-#'
+#' 
 #' @seealso
 #'   \itemize{
 #'     \item \code{\link{BAMBA}}, for the main model fitting routine.

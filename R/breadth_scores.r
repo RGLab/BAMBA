@@ -48,8 +48,8 @@ breadth_scores <- function(result,
                               agClasses,
                               reClasses,
                               .breadth_scores)
-    if (result$dataType == "bama") {
-        scores %>% dplyr::select(-reClass, -fcRBreadth, -fcRBreadthMax, -fcRBreadthMax2)
+    if (length(unique(result$data$reId))< 2) {
+      scores %>% dplyr::select(-reClass, -fcRBreadth, -fcRBreadthMax, -fcRBreadthMax2)
     }
     else { scores }
 }

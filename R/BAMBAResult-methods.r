@@ -16,16 +16,13 @@ print.BAMBAResult <- function(x, ...) {
   .catn <- function(n, name) {
       cat(n, ifelse(n == 1, name, paste0(name, "s")), "\n")
   }
-  cat("A BAMBA model fit on",
-      ifelse(x$dataType == "fc", "Fc array", "BAMA"), "data\n")
+  cat("A BAMBA model fit on array data\n")
   .catn(nrow(x$data), "observation")
   .catn(length(unique(x$data$subjectId)), "subject")
   .catn(length(unique(x$data$groupId)), "group")
   .catn(length(unique(x$data$tp)), "timepoint")
   .catn(length(unique(x$data$agId)), "antigen")
-  if (x$dataType == "fc") {
-      .catn(length(unique(x$data$reId)), "reagent")
-  }
+  .catn(length(unique(x$data$reId)), "Fc variable")
 }
 
 
