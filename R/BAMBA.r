@@ -69,6 +69,8 @@ BAMBA <- function(data,
                     init = function(){paramInit},
                     iter = nIter,
                     chains = nChains,
+                    include = FALSE,
+                    pars = c("ystar", "soft_z"),
                     ...)
 
     if (!is.null(outFolder)) {

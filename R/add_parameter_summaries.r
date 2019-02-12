@@ -82,10 +82,10 @@ add_parameter_summaries <- function(result) {
     }
     
     if (sum(result$data$sat) > 0) {
-      result$delta_sat <- extract_params(result, "delta_sat") %>%
+      result$y_sat <- extract_params(result, "y_sat") %>%
         mutate(sat_ind = which(result$data$sat)) %>%
-        rename(delta_sat = mean) %>%
-        dplyr::select(sat_ind, delta_sat, sd, q025, q975, n_eff, Rhat)
+        rename(y_sat = mean) %>%
+        dplyr::select(sat_ind, y_sat, sd, q025, q975, n_eff, Rhat)
     }
     
     result

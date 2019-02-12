@@ -23,6 +23,17 @@
 // \beta_{ag} ~ Uniform(0, 1000)
 // \sigma_t ~ Cauchy+(0, 10)
 
+functions {
+  real normal_mix_lpdf(real y, real theta, real mu1, real mu2, real sigma) { 
+    return log_mix(theta, normal_lpdf(y | mu1, sigma), 
+                          normal_lpdf(y | mu2, sigma)); 
+  } 
+  real normal_mix_lccdf(real y, real theta, real mu1, real mu2, real sigma) { 
+    return log_mix(theta, normal_lccdf(y | mu1, sigma), 
+                          normal_lccdf(y | mu2, sigma)); 
+  } 
+}
+
 data {
   int<lower=1> N; // Number of observations
   int<lower=1> T; // Number of timepoints (dimension of observations)
@@ -50,8 +61,6 @@ parameters {
   vector[T] mu0;
   
   vector<lower=0>[N_sat] delta_sat; // extra to add onto saturated observations
-  //real<lower=0> alpha_sat; // mean parameter for delta_sat gamma prior
-  //real<lower=0> beta_sat; // variance parameter for delta_sat gamma prior
 }
 
 transformed parameters {
@@ -71,7 +80,7 @@ transformed parameters {
   ystar = y;
   if (N_sat > 0) {
     for (n_s in 1:N_sat) {
-      ystar[sat_ind[n_s]] = ystar[sat_ind[n_s]] + delta_sat[n_s];
+      ystar[sat_ind[n_s]] = y[sat_ind[n_s]] + delta_sat[n_s];
     }
   }
 
@@ -95,8 +104,6 @@ model {
   omega_t ~ beta(a_t, b_t);
   alpha_ag ~ uniform(0, 1000);
   beta_ag ~ uniform(0, 1000);
-  //alpha_sat ~ uniform(0, 1000);
-  //beta_sat ~ uniform(0, 1000);
 
   mu0 ~ normal(0, 0.5);
 
@@ -104,8 +111,25 @@ model {
     mu_ag[n_a,] ~ gamma(alpha_ag, beta_ag);
   }
 
-  //delta_sat ~ gamma(alpha_sat, beta_sat);
-  delta_sat ~ uniform(0, 10);
+  if (N_sat > 0) {
+    for (n_s in 1:N_sat) {
+      int n = sat_ind[n_s];
+      delta_sat[n_s] ~ normal_mix(omega_ag[obs_to_ag[n]] * omega_t[obs_to_t[n]],
+                                  mu0[obs_to_t[n]] + mu_ag[obs_to_ag[n]][obs_to_t[n]] - y[n],
+                                  mu0[obs_to_t[n]] - y[n],
+                                  sigma[obs_to_t[n]]);
+      if (delta_sat[n_s] < 0) {
+        target += negative_infinity();
+      }
+      else {
+        target += -normal_mix_lccdf(0 | omega_ag[obs_to_ag[n]] * omega_t[obs_to_t[n]],
+                                    mu0[obs_to_t[n]] + mu_ag[obs_to_ag[n]][obs_to_t[n]] - y[n],
+                                    mu0[obs_to_t[n]] - y[n],
+                                    sigma[obs_to_t[n]]);
+      }
+
+    }
+  }
 
   for (n in 1:N) {
       target += log_sum_exp(soft_z[n]);

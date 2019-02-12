@@ -10914,9 +10914,96 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_bamba_ag_sat_model");
-    reader.add_event(125, 123, "end", "model_bamba_ag_sat_model");
+    reader.add_event(149, 147, "end", "model_bamba_ag_sat_model");
     return reader;
 }
+
+template <bool propto, typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+normal_mix_lpdf(const T0__& y,
+                    const T1__& theta,
+                    const T2__& mu1,
+                    const T3__& mu2,
+                    const T4__& sigma, std::ostream* pstream__) {
+    typedef typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type local_scalar_t__;
+    typedef local_scalar_t__ fun_return_scalar_t__;
+    const static bool propto__ = true;
+    (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+    int current_statement_begin__ = -1;
+    try {
+
+        current_statement_begin__ = 28;
+        return stan::math::promote_scalar<fun_return_scalar_t__>(log_mix(theta,normal_log(y,mu1,sigma),normal_log(y,mu2,sigma)));
+    } catch (const std::exception& e) {
+        stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+        // Next line prevents compiler griping about no return
+        throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+    }
+}
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+normal_mix_lpdf(const T0__& y,
+                    const T1__& theta,
+                    const T2__& mu1,
+                    const T3__& mu2,
+                    const T4__& sigma, std::ostream* pstream__) {
+    return normal_mix_lpdf<false>(y,theta,mu1,mu2,sigma, pstream__);
+}
+
+
+struct normal_mix_lpdf_functor__ {
+    template <bool propto, typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+        typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+    operator()(const T0__& y,
+                    const T1__& theta,
+                    const T2__& mu1,
+                    const T3__& mu2,
+                    const T4__& sigma, std::ostream* pstream__) const {
+        return normal_mix_lpdf(y, theta, mu1, mu2, sigma, pstream__);
+    }
+};
+
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+normal_mix_lccdf(const T0__& y,
+                     const T1__& theta,
+                     const T2__& mu1,
+                     const T3__& mu2,
+                     const T4__& sigma, std::ostream* pstream__) {
+    typedef typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type local_scalar_t__;
+    typedef local_scalar_t__ fun_return_scalar_t__;
+    const static bool propto__ = true;
+    (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+    int current_statement_begin__ = -1;
+    try {
+
+        current_statement_begin__ = 32;
+        return stan::math::promote_scalar<fun_return_scalar_t__>(log_mix(theta,normal_ccdf_log(y,mu1,sigma),normal_ccdf_log(y,mu2,sigma)));
+    } catch (const std::exception& e) {
+        stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+        // Next line prevents compiler griping about no return
+        throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+    }
+}
+
+
+struct normal_mix_lccdf_functor__ {
+    template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+        typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+    operator()(const T0__& y,
+                     const T1__& theta,
+                     const T2__& mu1,
+                     const T3__& mu2,
+                     const T4__& sigma, std::ostream* pstream__) const {
+        return normal_mix_lccdf(y, theta, mu1, mu2, sigma, pstream__);
+    }
+};
 
 class model_bamba_ag_sat_model : public prob_grad {
 private:
@@ -10964,19 +11051,19 @@ public:
 
         // initialize member variables
         try {
-            current_statement_begin__ = 27;
+            current_statement_begin__ = 38;
             context__.validate_dims("data initialization", "N", "int", context__.to_vec());
             N = int(0);
             vals_i__ = context__.vals_i("N");
             pos__ = 0;
             N = vals_i__[pos__++];
-            current_statement_begin__ = 28;
+            current_statement_begin__ = 39;
             context__.validate_dims("data initialization", "T", "int", context__.to_vec());
             T = int(0);
             vals_i__ = context__.vals_i("T");
             pos__ = 0;
             T = vals_i__[pos__++];
-            current_statement_begin__ = 29;
+            current_statement_begin__ = 40;
             validate_non_negative_index("obs_to_t", "N", N);
             context__.validate_dims("data initialization", "obs_to_t", "int", context__.to_vec(N));
             validate_non_negative_index("obs_to_t", "N", N);
@@ -10987,13 +11074,13 @@ public:
             for (size_t i_0__ = 0; i_0__ < obs_to_t_limit_0__; ++i_0__) {
                 obs_to_t[i_0__] = vals_i__[pos__++];
             }
-            current_statement_begin__ = 30;
+            current_statement_begin__ = 41;
             context__.validate_dims("data initialization", "N_ag", "int", context__.to_vec());
             N_ag = int(0);
             vals_i__ = context__.vals_i("N_ag");
             pos__ = 0;
             N_ag = vals_i__[pos__++];
-            current_statement_begin__ = 31;
+            current_statement_begin__ = 42;
             validate_non_negative_index("obs_to_ag", "N", N);
             context__.validate_dims("data initialization", "obs_to_ag", "int", context__.to_vec(N));
             validate_non_negative_index("obs_to_ag", "N", N);
@@ -11004,13 +11091,13 @@ public:
             for (size_t i_0__ = 0; i_0__ < obs_to_ag_limit_0__; ++i_0__) {
                 obs_to_ag[i_0__] = vals_i__[pos__++];
             }
-            current_statement_begin__ = 32;
+            current_statement_begin__ = 43;
             context__.validate_dims("data initialization", "N_sat", "int", context__.to_vec());
             N_sat = int(0);
             vals_i__ = context__.vals_i("N_sat");
             pos__ = 0;
             N_sat = vals_i__[pos__++];
-            current_statement_begin__ = 33;
+            current_statement_begin__ = 44;
             validate_non_negative_index("sat_ind", "N_sat", N_sat);
             context__.validate_dims("data initialization", "sat_ind", "int", context__.to_vec(N_sat));
             validate_non_negative_index("sat_ind", "N_sat", N_sat);
@@ -11021,7 +11108,7 @@ public:
             for (size_t i_0__ = 0; i_0__ < sat_ind_limit_0__; ++i_0__) {
                 sat_ind[i_0__] = vals_i__[pos__++];
             }
-            current_statement_begin__ = 34;
+            current_statement_begin__ = 45;
             validate_non_negative_index("y", "N", N);
             context__.validate_dims("data initialization", "y", "vector_d", context__.to_vec(N));
             validate_non_negative_index("y", "N", N);
@@ -11034,27 +11121,27 @@ public:
             }
 
             // validate, data variables
-            current_statement_begin__ = 27;
+            current_statement_begin__ = 38;
             check_greater_or_equal(function__,"N",N,1);
-            current_statement_begin__ = 28;
+            current_statement_begin__ = 39;
             check_greater_or_equal(function__,"T",T,1);
-            current_statement_begin__ = 29;
+            current_statement_begin__ = 40;
             for (int k0__ = 0; k0__ < N; ++k0__) {
                 check_greater_or_equal(function__,"obs_to_t[k0__]",obs_to_t[k0__],1);
             }
-            current_statement_begin__ = 30;
+            current_statement_begin__ = 41;
             check_greater_or_equal(function__,"N_ag",N_ag,1);
-            current_statement_begin__ = 31;
+            current_statement_begin__ = 42;
             for (int k0__ = 0; k0__ < N; ++k0__) {
                 check_greater_or_equal(function__,"obs_to_ag[k0__]",obs_to_ag[k0__],1);
             }
-            current_statement_begin__ = 32;
+            current_statement_begin__ = 43;
             check_greater_or_equal(function__,"N_sat",N_sat,0);
-            current_statement_begin__ = 33;
+            current_statement_begin__ = 44;
             for (int k0__ = 0; k0__ < N_sat; ++k0__) {
                 check_greater_or_equal(function__,"sat_ind[k0__]",sat_ind[k0__],1);
             }
-            current_statement_begin__ = 34;
+            current_statement_begin__ = 45;
             // initialize data variables
 
 
@@ -11063,35 +11150,35 @@ public:
             // validate, set parameter ranges
             num_params_r__ = 0U;
             param_ranges_i__.clear();
-            current_statement_begin__ = 39;
+            current_statement_begin__ = 50;
             validate_non_negative_index("omega_ag", "N_ag", N_ag);
             num_params_r__ += N_ag;
-            current_statement_begin__ = 40;
+            current_statement_begin__ = 51;
             validate_non_negative_index("omega_t", "T", T);
             num_params_r__ += T;
-            current_statement_begin__ = 42;
+            current_statement_begin__ = 53;
             validate_non_negative_index("sigma", "T", T);
             num_params_r__ += T;
-            current_statement_begin__ = 43;
+            current_statement_begin__ = 54;
             ++num_params_r__;
-            current_statement_begin__ = 44;
+            current_statement_begin__ = 55;
             ++num_params_r__;
-            current_statement_begin__ = 45;
+            current_statement_begin__ = 56;
         validate_non_negative_index("mu_ag", "N_ag", N_ag);
             validate_non_negative_index("mu_ag", "T", T);
             num_params_r__ += N_ag * T;
-            current_statement_begin__ = 46;
+            current_statement_begin__ = 57;
             ++num_params_r__;
-            current_statement_begin__ = 47;
+            current_statement_begin__ = 58;
             ++num_params_r__;
-            current_statement_begin__ = 48;
+            current_statement_begin__ = 59;
             ++num_params_r__;
-            current_statement_begin__ = 49;
+            current_statement_begin__ = 60;
             ++num_params_r__;
-            current_statement_begin__ = 50;
+            current_statement_begin__ = 61;
             validate_non_negative_index("mu0", "T", T);
             num_params_r__ += T;
-            current_statement_begin__ = 52;
+            current_statement_begin__ = 63;
             validate_non_negative_index("delta_sat", "N_sat", N_sat);
             num_params_r__ += N_sat;
         } catch (const std::exception& e) {
@@ -11411,37 +11498,37 @@ public:
 
 
             // transformed parameters
-            current_statement_begin__ = 58;
+            current_statement_begin__ = 67;
             local_scalar_t__ a_ag;
             (void) a_ag;  // dummy to suppress unused var warning
 
             stan::math::initialize(a_ag, DUMMY_VAR__);
             stan::math::fill(a_ag,DUMMY_VAR__);
-            current_statement_begin__ = 59;
+            current_statement_begin__ = 68;
             local_scalar_t__ b_ag;
             (void) b_ag;  // dummy to suppress unused var warning
 
             stan::math::initialize(b_ag, DUMMY_VAR__);
             stan::math::fill(b_ag,DUMMY_VAR__);
-            current_statement_begin__ = 60;
+            current_statement_begin__ = 69;
             local_scalar_t__ a_t;
             (void) a_t;  // dummy to suppress unused var warning
 
             stan::math::initialize(a_t, DUMMY_VAR__);
             stan::math::fill(a_t,DUMMY_VAR__);
-            current_statement_begin__ = 61;
+            current_statement_begin__ = 70;
             local_scalar_t__ b_t;
             (void) b_t;  // dummy to suppress unused var warning
 
             stan::math::initialize(b_t, DUMMY_VAR__);
             stan::math::fill(b_t,DUMMY_VAR__);
-            current_statement_begin__ = 62;
+            current_statement_begin__ = 71;
             validate_non_negative_index("soft_z", "2", 2);
             validate_non_negative_index("soft_z", "N", N);
             vector<Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1> > soft_z(N, (Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1> (static_cast<Eigen::VectorXd::Index>(2))));
             stan::math::initialize(soft_z, DUMMY_VAR__);
             stan::math::fill(soft_z,DUMMY_VAR__);
-            current_statement_begin__ = 64;
+            current_statement_begin__ = 73;
             validate_non_negative_index("ystar", "N", N);
             Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1>  ystar(static_cast<Eigen::VectorXd::Index>(N));
             (void) ystar;  // dummy to suppress unused var warning
@@ -11450,38 +11537,38 @@ public:
             stan::math::fill(ystar,DUMMY_VAR__);
 
 
-            current_statement_begin__ = 66;
+            current_statement_begin__ = 75;
             stan::math::assign(a_ag, (lambda_ag * phi_ag));
-            current_statement_begin__ = 67;
+            current_statement_begin__ = 76;
             stan::math::assign(b_ag, (lambda_ag * (1 - phi_ag)));
-            current_statement_begin__ = 68;
+            current_statement_begin__ = 77;
             stan::math::assign(a_t, (lambda_t * phi_t));
-            current_statement_begin__ = 69;
+            current_statement_begin__ = 78;
             stan::math::assign(b_t, (lambda_t * (1 - phi_t)));
-            current_statement_begin__ = 71;
+            current_statement_begin__ = 80;
             stan::math::assign(ystar, y);
-            current_statement_begin__ = 72;
+            current_statement_begin__ = 81;
             if (as_bool(logical_gt(N_sat,0))) {
 
-                current_statement_begin__ = 73;
+                current_statement_begin__ = 82;
                 for (int n_s = 1; n_s <= N_sat; ++n_s) {
 
-                    current_statement_begin__ = 74;
+                    current_statement_begin__ = 83;
                     stan::model::assign(ystar, 
                                 stan::model::cons_list(stan::model::index_uni(get_base1(sat_ind,n_s,"sat_ind",1)), stan::model::nil_index_list()), 
-                                stan::model::deep_copy((get_base1(ystar,get_base1(sat_ind,n_s,"sat_ind",1),"ystar",1) + get_base1(delta_sat,n_s,"delta_sat",1))), 
+                                (get_base1(y,get_base1(sat_ind,n_s,"sat_ind",1),"y",1) + get_base1(delta_sat,n_s,"delta_sat",1)), 
                                 "assigning variable ystar");
                 }
             }
-            current_statement_begin__ = 79;
+            current_statement_begin__ = 88;
             for (int n = 1; n <= N; ++n) {
 
-                current_statement_begin__ = 80;
+                current_statement_begin__ = 89;
                 stan::model::assign(soft_z, 
                             stan::model::cons_list(stan::model::index_uni(n), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list())), 
                             (stan::math::log((1 - (get_base1(omega_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),"omega_ag",1) * get_base1(omega_t,get_base1(obs_to_t,n,"obs_to_t",1),"omega_t",1)))) + normal_log(get_base1(ystar,n,"ystar",1),get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1),get_base1(sigma,get_base1(obs_to_t,n,"obs_to_t",1),"sigma",1))), 
                             "assigning variable soft_z");
-                current_statement_begin__ = 82;
+                current_statement_begin__ = 91;
                 stan::model::assign(soft_z, 
                             stan::model::cons_list(stan::model::index_uni(n), stan::model::cons_list(stan::model::index_uni(2), stan::model::nil_index_list())), 
                             (stan::math::log((get_base1(omega_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),"omega_ag",1) * get_base1(omega_t,get_base1(obs_to_t,n,"obs_to_t",1),"omega_t",1))) + normal_log(get_base1(ystar,n,"ystar",1),(get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) + get_base1(mu_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),get_base1(obs_to_t,n,"obs_to_t",1),"mu_ag",1)),get_base1(sigma,get_base1(obs_to_t,n,"obs_to_t",1),"sigma",1))), 
@@ -11528,54 +11615,81 @@ public:
 
             const char* function__ = "validate transformed params";
             (void) function__;  // dummy to suppress unused var warning
-            current_statement_begin__ = 58;
+            current_statement_begin__ = 67;
             check_greater_or_equal(function__,"a_ag",a_ag,0);
-            current_statement_begin__ = 59;
+            current_statement_begin__ = 68;
             check_greater_or_equal(function__,"b_ag",b_ag,0);
-            current_statement_begin__ = 60;
+            current_statement_begin__ = 69;
             check_greater_or_equal(function__,"a_t",a_t,0);
-            current_statement_begin__ = 61;
+            current_statement_begin__ = 70;
             check_greater_or_equal(function__,"b_t",b_t,0);
-            current_statement_begin__ = 62;
+            current_statement_begin__ = 71;
             for (int k0__ = 0; k0__ < N; ++k0__) {
                 check_less_or_equal(function__,"soft_z[k0__]",soft_z[k0__],0);
             }
-            current_statement_begin__ = 64;
+            current_statement_begin__ = 73;
 
             // model body
 
-            current_statement_begin__ = 89;
+            current_statement_begin__ = 98;
             lp_accum__.add(cauchy_log<propto__>(sigma, 0, 10));
-            current_statement_begin__ = 90;
+            current_statement_begin__ = 99;
             lp_accum__.add(beta_log<propto__>(phi_ag, 1, 1));
-            current_statement_begin__ = 91;
+            current_statement_begin__ = 100;
             lp_accum__.add(pareto_log<propto__>(lambda_ag, 0.10000000000000001, 1.5));
-            current_statement_begin__ = 92;
-            lp_accum__.add(beta_log<propto__>(phi_t, 1, 1));
-            current_statement_begin__ = 93;
-            lp_accum__.add(pareto_log<propto__>(lambda_t, 0.10000000000000001, 1.5));
-            current_statement_begin__ = 94;
-            lp_accum__.add(beta_log<propto__>(omega_ag, a_ag, b_ag));
-            current_statement_begin__ = 95;
-            lp_accum__.add(beta_log<propto__>(omega_t, a_t, b_t));
-            current_statement_begin__ = 96;
-            lp_accum__.add(uniform_log<propto__>(alpha_ag, 0, 1000));
-            current_statement_begin__ = 97;
-            lp_accum__.add(uniform_log<propto__>(beta_ag, 0, 1000));
             current_statement_begin__ = 101;
-            lp_accum__.add(normal_log<propto__>(mu0, 0, 0.5));
+            lp_accum__.add(beta_log<propto__>(phi_t, 1, 1));
+            current_statement_begin__ = 102;
+            lp_accum__.add(pareto_log<propto__>(lambda_t, 0.10000000000000001, 1.5));
             current_statement_begin__ = 103;
+            lp_accum__.add(beta_log<propto__>(omega_ag, a_ag, b_ag));
+            current_statement_begin__ = 104;
+            lp_accum__.add(beta_log<propto__>(omega_t, a_t, b_t));
+            current_statement_begin__ = 105;
+            lp_accum__.add(uniform_log<propto__>(alpha_ag, 0, 1000));
+            current_statement_begin__ = 106;
+            lp_accum__.add(uniform_log<propto__>(beta_ag, 0, 1000));
+            current_statement_begin__ = 108;
+            lp_accum__.add(normal_log<propto__>(mu0, 0, 0.5));
+            current_statement_begin__ = 110;
             for (int n_a = 1; n_a <= N_ag; ++n_a) {
 
-                current_statement_begin__ = 104;
+                current_statement_begin__ = 111;
                 lp_accum__.add(gamma_log<propto__>(stan::model::rvalue(mu_ag, stan::model::cons_list(stan::model::index_uni(n_a), stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list())), "mu_ag"), alpha_ag, beta_ag));
             }
-            current_statement_begin__ = 108;
-            lp_accum__.add(uniform_log<propto__>(delta_sat, 0, 10));
-            current_statement_begin__ = 110;
+            current_statement_begin__ = 114;
+            if (as_bool(logical_gt(N_sat,0))) {
+
+                current_statement_begin__ = 115;
+                for (int n_s = 1; n_s <= N_sat; ++n_s) {
+                    {
+                    current_statement_begin__ = 116;
+                    int n(0);
+                    (void) n;  // dummy to suppress unused var warning
+
+                    stan::math::fill(n, std::numeric_limits<int>::min());
+                    stan::math::assign(n,get_base1(sat_ind,n_s,"sat_ind",1));
+
+
+                    current_statement_begin__ = 117;
+                    lp_accum__.add(normal_mix_lpdf<propto__>(get_base1(delta_sat,n_s,"delta_sat",1), (get_base1(omega_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),"omega_ag",1) * get_base1(omega_t,get_base1(obs_to_t,n,"obs_to_t",1),"omega_t",1)), ((get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) + get_base1(mu_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),get_base1(obs_to_t,n,"obs_to_t",1),"mu_ag",1)) - get_base1(y,n,"y",1)), (get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) - get_base1(y,n,"y",1)), get_base1(sigma,get_base1(obs_to_t,n,"obs_to_t",1),"sigma",1), pstream__));
+                    current_statement_begin__ = 121;
+                    if (as_bool(logical_lt(get_base1(delta_sat,n_s,"delta_sat",1),0))) {
+
+                        current_statement_begin__ = 122;
+                        lp_accum__.add(stan::math::negative_infinity());
+                    } else {
+
+                        current_statement_begin__ = 125;
+                        lp_accum__.add(-(normal_mix_lccdf(0,(get_base1(omega_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),"omega_ag",1) * get_base1(omega_t,get_base1(obs_to_t,n,"obs_to_t",1),"omega_t",1)),((get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) + get_base1(mu_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),get_base1(obs_to_t,n,"obs_to_t",1),"mu_ag",1)) - get_base1(y,n,"y",1)),(get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) - get_base1(y,n,"y",1)),get_base1(sigma,get_base1(obs_to_t,n,"obs_to_t",1),"sigma",1), pstream__)));
+                    }
+                    }
+                }
+            }
+            current_statement_begin__ = 134;
             for (int n = 1; n <= N; ++n) {
 
-                current_statement_begin__ = 111;
+                current_statement_begin__ = 135;
                 lp_accum__.add(log_sum_exp(get_base1(soft_z,n,"soft_z",1)));
             }
 
@@ -11752,37 +11866,37 @@ public:
         (void) DUMMY_VAR__;  // suppress unused var warning
 
         try {
-            current_statement_begin__ = 58;
+            current_statement_begin__ = 67;
             local_scalar_t__ a_ag;
             (void) a_ag;  // dummy to suppress unused var warning
 
             stan::math::initialize(a_ag, DUMMY_VAR__);
             stan::math::fill(a_ag,DUMMY_VAR__);
-            current_statement_begin__ = 59;
+            current_statement_begin__ = 68;
             local_scalar_t__ b_ag;
             (void) b_ag;  // dummy to suppress unused var warning
 
             stan::math::initialize(b_ag, DUMMY_VAR__);
             stan::math::fill(b_ag,DUMMY_VAR__);
-            current_statement_begin__ = 60;
+            current_statement_begin__ = 69;
             local_scalar_t__ a_t;
             (void) a_t;  // dummy to suppress unused var warning
 
             stan::math::initialize(a_t, DUMMY_VAR__);
             stan::math::fill(a_t,DUMMY_VAR__);
-            current_statement_begin__ = 61;
+            current_statement_begin__ = 70;
             local_scalar_t__ b_t;
             (void) b_t;  // dummy to suppress unused var warning
 
             stan::math::initialize(b_t, DUMMY_VAR__);
             stan::math::fill(b_t,DUMMY_VAR__);
-            current_statement_begin__ = 62;
+            current_statement_begin__ = 71;
             validate_non_negative_index("soft_z", "2", 2);
             validate_non_negative_index("soft_z", "N", N);
             vector<Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1> > soft_z(N, (Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1> (static_cast<Eigen::VectorXd::Index>(2))));
             stan::math::initialize(soft_z, DUMMY_VAR__);
             stan::math::fill(soft_z,DUMMY_VAR__);
-            current_statement_begin__ = 64;
+            current_statement_begin__ = 73;
             validate_non_negative_index("ystar", "N", N);
             Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1>  ystar(static_cast<Eigen::VectorXd::Index>(N));
             (void) ystar;  // dummy to suppress unused var warning
@@ -11791,38 +11905,38 @@ public:
             stan::math::fill(ystar,DUMMY_VAR__);
 
 
-            current_statement_begin__ = 66;
+            current_statement_begin__ = 75;
             stan::math::assign(a_ag, (lambda_ag * phi_ag));
-            current_statement_begin__ = 67;
+            current_statement_begin__ = 76;
             stan::math::assign(b_ag, (lambda_ag * (1 - phi_ag)));
-            current_statement_begin__ = 68;
+            current_statement_begin__ = 77;
             stan::math::assign(a_t, (lambda_t * phi_t));
-            current_statement_begin__ = 69;
+            current_statement_begin__ = 78;
             stan::math::assign(b_t, (lambda_t * (1 - phi_t)));
-            current_statement_begin__ = 71;
+            current_statement_begin__ = 80;
             stan::math::assign(ystar, y);
-            current_statement_begin__ = 72;
+            current_statement_begin__ = 81;
             if (as_bool(logical_gt(N_sat,0))) {
 
-                current_statement_begin__ = 73;
+                current_statement_begin__ = 82;
                 for (int n_s = 1; n_s <= N_sat; ++n_s) {
 
-                    current_statement_begin__ = 74;
+                    current_statement_begin__ = 83;
                     stan::model::assign(ystar, 
                                 stan::model::cons_list(stan::model::index_uni(get_base1(sat_ind,n_s,"sat_ind",1)), stan::model::nil_index_list()), 
-                                stan::model::deep_copy((get_base1(ystar,get_base1(sat_ind,n_s,"sat_ind",1),"ystar",1) + get_base1(delta_sat,n_s,"delta_sat",1))), 
+                                (get_base1(y,get_base1(sat_ind,n_s,"sat_ind",1),"y",1) + get_base1(delta_sat,n_s,"delta_sat",1)), 
                                 "assigning variable ystar");
                 }
             }
-            current_statement_begin__ = 79;
+            current_statement_begin__ = 88;
             for (int n = 1; n <= N; ++n) {
 
-                current_statement_begin__ = 80;
+                current_statement_begin__ = 89;
                 stan::model::assign(soft_z, 
                             stan::model::cons_list(stan::model::index_uni(n), stan::model::cons_list(stan::model::index_uni(1), stan::model::nil_index_list())), 
                             (stan::math::log((1 - (get_base1(omega_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),"omega_ag",1) * get_base1(omega_t,get_base1(obs_to_t,n,"obs_to_t",1),"omega_t",1)))) + normal_log(get_base1(ystar,n,"ystar",1),get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1),get_base1(sigma,get_base1(obs_to_t,n,"obs_to_t",1),"sigma",1))), 
                             "assigning variable soft_z");
-                current_statement_begin__ = 82;
+                current_statement_begin__ = 91;
                 stan::model::assign(soft_z, 
                             stan::model::cons_list(stan::model::index_uni(n), stan::model::cons_list(stan::model::index_uni(2), stan::model::nil_index_list())), 
                             (stan::math::log((get_base1(omega_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),"omega_ag",1) * get_base1(omega_t,get_base1(obs_to_t,n,"obs_to_t",1),"omega_t",1))) + normal_log(get_base1(ystar,n,"ystar",1),(get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) + get_base1(mu_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),get_base1(obs_to_t,n,"obs_to_t",1),"mu_ag",1)),get_base1(sigma,get_base1(obs_to_t,n,"obs_to_t",1),"sigma",1))), 
@@ -11830,19 +11944,19 @@ public:
             }
 
             // validate transformed parameters
-            current_statement_begin__ = 58;
+            current_statement_begin__ = 67;
             check_greater_or_equal(function__,"a_ag",a_ag,0);
-            current_statement_begin__ = 59;
+            current_statement_begin__ = 68;
             check_greater_or_equal(function__,"b_ag",b_ag,0);
-            current_statement_begin__ = 60;
+            current_statement_begin__ = 69;
             check_greater_or_equal(function__,"a_t",a_t,0);
-            current_statement_begin__ = 61;
+            current_statement_begin__ = 70;
             check_greater_or_equal(function__,"b_t",b_t,0);
-            current_statement_begin__ = 62;
+            current_statement_begin__ = 71;
             for (int k0__ = 0; k0__ < N; ++k0__) {
                 check_less_or_equal(function__,"soft_z[k0__]",soft_z[k0__],0);
             }
-            current_statement_begin__ = 64;
+            current_statement_begin__ = 73;
 
             // write transformed parameters
             if (include_tparams__) {
@@ -11861,7 +11975,7 @@ public:
             }
             if (!include_gqs__) return;
             // declare and define generated quantities
-            current_statement_begin__ = 119;
+            current_statement_begin__ = 143;
             validate_non_negative_index("z", "2", 2);
             validate_non_negative_index("z", "N", N);
             vector<Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1> > z(N, (Eigen::Matrix<local_scalar_t__,Eigen::Dynamic,1> (static_cast<Eigen::VectorXd::Index>(2))));
@@ -11869,10 +11983,10 @@ public:
             stan::math::fill(z,DUMMY_VAR__);
 
 
-            current_statement_begin__ = 120;
+            current_statement_begin__ = 144;
             for (int n = 1; n <= N; ++n) {
 
-                current_statement_begin__ = 121;
+                current_statement_begin__ = 145;
                 stan::model::assign(z, 
                             stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list()), 
                             softmax(get_base1(soft_z,n,"soft_z",1)), 
@@ -11880,7 +11994,7 @@ public:
             }
 
             // validate generated quantities
-            current_statement_begin__ = 119;
+            current_statement_begin__ = 143;
             for (int k0__ = 0; k0__ < N; ++k0__) {
                 check_greater_or_equal(function__,"z[k0__]",z[k0__],0);
                 check_less_or_equal(function__,"z[k0__]",z[k0__],1);

@@ -10071,9 +10071,94 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_bamba_ag_sat_model");
-    reader.add_event(125, 123, "end", "model_bamba_ag_sat_model");
+    reader.add_event(149, 147, "end", "model_bamba_ag_sat_model");
     return reader;
 }
+
+template <bool propto, typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+normal_mix_lpdf(const T0__& y,
+                    const T1__& theta,
+                    const T2__& mu1,
+                    const T3__& mu2,
+                    const T4__& sigma, std::ostream* pstream__) {
+    typedef typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type local_scalar_t__;
+    typedef local_scalar_t__ fun_return_scalar_t__;
+    const static bool propto__ = true;
+    (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+    int current_statement_begin__ = -1;
+    try {
+
+        return stan::math::promote_scalar<fun_return_scalar_t__>(log_mix(theta,normal_log(y,mu1,sigma),normal_log(y,mu2,sigma)));
+    } catch (const std::exception& e) {
+        stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+        // Next line prevents compiler griping about no return
+        throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+    }
+}
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+normal_mix_lpdf(const T0__& y,
+                    const T1__& theta,
+                    const T2__& mu1,
+                    const T3__& mu2,
+                    const T4__& sigma, std::ostream* pstream__) {
+    return normal_mix_lpdf<false>(y,theta,mu1,mu2,sigma, pstream__);
+}
+
+
+struct normal_mix_lpdf_functor__ {
+    template <bool propto, typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+        typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+    operator()(const T0__& y,
+                    const T1__& theta,
+                    const T2__& mu1,
+                    const T3__& mu2,
+                    const T4__& sigma, std::ostream* pstream__) const {
+        return normal_mix_lpdf(y, theta, mu1, mu2, sigma, pstream__);
+    }
+};
+
+template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+normal_mix_lccdf(const T0__& y,
+                     const T1__& theta,
+                     const T2__& mu1,
+                     const T3__& mu2,
+                     const T4__& sigma, std::ostream* pstream__) {
+    typedef typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type local_scalar_t__;
+    typedef local_scalar_t__ fun_return_scalar_t__;
+    const static bool propto__ = true;
+    (void) propto__;
+        local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+        (void) DUMMY_VAR__;  // suppress unused var warning
+
+    int current_statement_begin__ = -1;
+    try {
+
+        return stan::math::promote_scalar<fun_return_scalar_t__>(log_mix(theta,normal_ccdf_log(y,mu1,sigma),normal_ccdf_log(y,mu2,sigma)));
+    } catch (const std::exception& e) {
+        stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
+        // Next line prevents compiler griping about no return
+        throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+    }
+}
+
+
+struct normal_mix_lccdf_functor__ {
+    template <typename T0__, typename T1__, typename T2__, typename T3__, typename T4__>
+        typename boost::math::tools::promote_args<T0__, T1__, T2__, T3__, typename boost::math::tools::promote_args<T4__>::type>::type
+    operator()(const T0__& y,
+                     const T1__& theta,
+                     const T2__& mu1,
+                     const T3__& mu2,
+                     const T4__& sigma, std::ostream* pstream__) const {
+        return normal_mix_lccdf(y, theta, mu1, mu2, sigma, pstream__);
+    }
+};
 
 class model_bamba_ag_sat_model : public prob_grad {
 private:
@@ -10584,7 +10669,7 @@ public:
 
                     stan::model::assign(ystar, 
                                 stan::model::cons_list(stan::model::index_uni(get_base1(sat_ind,n_s,"sat_ind",1)), stan::model::nil_index_list()), 
-                                stan::model::deep_copy((get_base1(ystar,get_base1(sat_ind,n_s,"sat_ind",1),"ystar",1) + get_base1(delta_sat,n_s,"delta_sat",1))), 
+                                (get_base1(y,get_base1(sat_ind,n_s,"sat_ind",1),"y",1) + get_base1(delta_sat,n_s,"delta_sat",1)), 
                                 "assigning variable ystar");
                 }
             }
@@ -10664,7 +10749,28 @@ public:
 
                 lp_accum__.add(gamma_log<propto__>(stan::model::rvalue(mu_ag, stan::model::cons_list(stan::model::index_uni(n_a), stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list())), "mu_ag"), alpha_ag, beta_ag));
             }
-            lp_accum__.add(uniform_log<propto__>(delta_sat, 0, 10));
+            if (as_bool(logical_gt(N_sat,0))) {
+
+                for (int n_s = 1; n_s <= N_sat; ++n_s) {
+                    {
+                    int n(0);
+                    (void) n;  // dummy to suppress unused var warning
+
+                    stan::math::fill(n, std::numeric_limits<int>::min());
+                    stan::math::assign(n,get_base1(sat_ind,n_s,"sat_ind",1));
+
+
+                    lp_accum__.add(normal_mix_lpdf<propto__>(get_base1(delta_sat,n_s,"delta_sat",1), (get_base1(omega_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),"omega_ag",1) * get_base1(omega_t,get_base1(obs_to_t,n,"obs_to_t",1),"omega_t",1)), ((get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) + get_base1(mu_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),get_base1(obs_to_t,n,"obs_to_t",1),"mu_ag",1)) - get_base1(y,n,"y",1)), (get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) - get_base1(y,n,"y",1)), get_base1(sigma,get_base1(obs_to_t,n,"obs_to_t",1),"sigma",1), pstream__));
+                    if (as_bool(logical_lt(get_base1(delta_sat,n_s,"delta_sat",1),0))) {
+
+                        lp_accum__.add(stan::math::negative_infinity());
+                    } else {
+
+                        lp_accum__.add(-(normal_mix_lccdf(0,(get_base1(omega_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),"omega_ag",1) * get_base1(omega_t,get_base1(obs_to_t,n,"obs_to_t",1),"omega_t",1)),((get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) + get_base1(mu_ag,get_base1(obs_to_ag,n,"obs_to_ag",1),get_base1(obs_to_t,n,"obs_to_t",1),"mu_ag",1)) - get_base1(y,n,"y",1)),(get_base1(mu0,get_base1(obs_to_t,n,"obs_to_t",1),"mu0",1) - get_base1(y,n,"y",1)),get_base1(sigma,get_base1(obs_to_t,n,"obs_to_t",1),"sigma",1), pstream__)));
+                    }
+                    }
+                }
+            }
             for (int n = 1; n <= N; ++n) {
 
                 lp_accum__.add(log_sum_exp(get_base1(soft_z,n,"soft_z",1)));
@@ -10887,7 +10993,7 @@ public:
 
                     stan::model::assign(ystar, 
                                 stan::model::cons_list(stan::model::index_uni(get_base1(sat_ind,n_s,"sat_ind",1)), stan::model::nil_index_list()), 
-                                stan::model::deep_copy((get_base1(ystar,get_base1(sat_ind,n_s,"sat_ind",1),"ystar",1) + get_base1(delta_sat,n_s,"delta_sat",1))), 
+                                (get_base1(y,get_base1(sat_ind,n_s,"sat_ind",1),"y",1) + get_base1(delta_sat,n_s,"delta_sat",1)), 
                                 "assigning variable ystar");
                 }
             }
