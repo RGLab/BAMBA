@@ -38,7 +38,7 @@ add_parameter_summaries <- function(result) {
                                  "phi_grp", "lambda_grp", "phi_ag", "lambda_ag",
                                  "phi_re", "lambda_re", "phi_t", "lambda_t",
                                  "a_grp", "b_grp", "a_ag", "b_ag",
-                                 "a_re", "b_re", "a_t", "b_t", "alpha_sat", "beta_sat")) %>%
+                                 "a_re", "b_re", "a_t", "b_t")) %>%
         rename(hyperparameter = var) %>%
         dplyr::select(hyperparameter, mean, sd, q025, q975, n_eff, Rhat)
 
@@ -79,13 +79,6 @@ add_parameter_summaries <- function(result) {
         rename(omega_grp = mean) %>%
         left_join(grptbl, by = "groupId") %>%
         dplyr::select(group, groupId, omega_grp, sd, q025, q975, n_eff, Rhat)
-    }
-    
-    if (sum(result$data$sat) > 0) {
-      result$y_sat <- extract_params(result, "y_sat") %>%
-        mutate(sat_ind = which(result$data$sat)) %>%
-        rename(y_sat = mean) %>%
-        dplyr::select(sat_ind, y_sat, sd, q025, q975, n_eff, Rhat)
     }
     
     result

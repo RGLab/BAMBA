@@ -27,7 +27,7 @@ testdata <- simulate_fc_data(nTp, nGrp, nSubj, nAg, nRe,
                           groupProbs, agProbs, reProbs)
 
 simulated_data <- testdata$simData %>%
-    select(subjectId, group, re, ag, val, tp, sat) %>%
+    select(subjectId, group, re, ag, val, tp) %>%
     tbl_df()
 
 
@@ -93,12 +93,6 @@ test_that("The tp column is added if not present", {
   expect("tp" %in% colnames(fixed_data))
 })
 
-nosat_data <- simulated_data %>% select(-sat)
-test_that("The sat column is added if not present", {
-  expect_message({fixed_data = prepare_data(nosat_data)})
-  expect("sat" %in% colnames(fixed_data))
-})
-
 ## test non-standard tp
 non_numeric_tp_data <- simulated_data
 non_numeric_tp_data$tp[3] <- "tp"
@@ -117,17 +111,5 @@ test_that("The tp column is properly checked and adjusted", {
     comp_data <- dense_data %>%
         left_join(non_dense_data, by = c("subjectId", "group", "re", "ag", "val"))
     expect_equal(comp_data$tp.x, comp_data$tp.y)
-})
-
-## test non-standard sat
-non_logical_sat_data <- simulated_data
-non_logical_sat_data$sat[5] <- "sat"
-
-zero_one_sat_data <- simulated_data
-zero_one_sat_data$sat[5] <- 1
-
-test_that("The sat column is properly checked", {
-  expect_error(prepare_data(non_logical_sat_data))
-  temp <- prepare_data(zero_one_sat_data)
 })
 

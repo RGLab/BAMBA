@@ -36,11 +36,7 @@ prepare_data <- function(data) {
       message("data - simple tp column added")
       data <- data %>% mutate(tp = 1)
     }
-    if (!"sat" %in% colnames(data)) {
-      message("data - simple sat column added")
-      data <- data %>% mutate(sat = FALSE)
-    }
-    
+ 
     ## Check tp column
     data$tp <- suppressWarnings(as.numeric(data$tp))
     if (any(is.na(data$tp))) {
@@ -48,13 +44,6 @@ prepare_data <- function(data) {
                           "Invalid data - tp column must be numeric\n")
     }
 
-    ## Check sat column
-    data$sat <- suppressWarnings(as.logical(data$sat))
-    if (any(is.na(data$sat))) {
-      errorStrings <- c(errorStrings,
-                        "Invalid data - sat column must contain TRUE or FALSE values only\n")
-    }
-    
     if(!is.null(errorStrings)) {
         stop(errorStrings)
     }

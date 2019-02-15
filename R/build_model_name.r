@@ -6,8 +6,5 @@ build_model_name <- function(modelData) {
   if (modelData$N_grp > 1) {
     mName <- paste(mName, "grp", sep="_")
   }
-  if (modelData$N_sat > 0) {
-    mName <- paste(mName, "sat", sep="_")
-  }
   return(paste(mName, "model", sep="_"))
 }

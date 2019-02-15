@@ -58,8 +58,7 @@ simulate_fc_data <- function(nTp,
                group = paste0("grp", str_pad(group, 3, "left", "0")),
                subjectId = paste0(group, "_subj", str_pad(subjectId, 3, "left", "0")),
                ag = paste0("ag", str_pad(ag, 3, "left", "0")),
-               re = paste0("re", str_pad(re, 3, "left", "0")),
-               sat = FALSE)
+               re = paste0("re", str_pad(re, 3, "left", "0")))
 
     list(simData = simData,
          agMeans = muAg,

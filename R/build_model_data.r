@@ -20,7 +20,5 @@ build_model_data <- function(data) {
          obs_to_ag = data$agId,
          N_re = max(data$reId),
          obs_to_re = data$reId,
-         N_sat = sum(data$sat),
-         sat_ind = which(data$sat),
          y = data$val)
 }
