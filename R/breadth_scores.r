@@ -4,21 +4,21 @@
     fab <- resp %>%
         group_by(group, subjectId, ag) %>%
         summarize(prob = max(responseProb),
-                  fcb = mean(responseProb),
-                  fcbsum = sum(responseProb)) %>%
+                  fcbsum = sum(responseProb),
+                  expResp = 1 - prod(1 - responseProb)) %>%
         group_by(group, subjectId) %>%
         summarize(fabBreadth = mean(prob),
-                  fcRBreadthMax = max(fcb),
-                  fcRBreadthMax2 = max(fcbsum)/nFc)
+                  fabBreadthExp = mean(expResp),
+                  fcRBreadthMax = max(fcbsum)/nFc)
     fcr <- resp %>%
         group_by(group, subjectId, re) %>%
         summarize(prob = max(responseProb),
-                  agb = mean(responseProb),
-                  agbsum = sum(responseProb)) %>%
+                  agbsum = sum(responseProb),
+                  expResp = 1 - prod(1 - responseProb)) %>%
         group_by(group, subjectId) %>%
         summarize(fcRBreadth = mean(prob),
-                  fabBreadthMax = max(agb),
-                  fabBreadthMax2 = max(agbsum)/nAg)
+                  fcRBreadthExp = mean(expResp),
+                  fabBreadthMax = max(agbsum)/nAg)
     fab %>%
         left_join(fcr, by = c("group", "subjectId"))
 }
@@ -49,7 +49,7 @@ breadth_scores <- function(result,
                               reClasses,
                               .breadth_scores)
     if (length(unique(result$data$reId))< 2) {
-      scores %>% dplyr::select(-reClass, -fcRBreadth, -fcRBreadthMax, -fcRBreadthMax2)
+      scores %>% dplyr::select(-reClass, -fcRBreadth, -fcRBreadthMax, -fcRBreadthExp)
     }
     else { scores }
 }
